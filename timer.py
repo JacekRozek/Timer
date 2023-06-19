@@ -4,7 +4,7 @@ from datetime import datetime
 def update_clock():
     current_time = datetime.now().strftime("%H:%M:%S")
     label_time.config(text=current_time)
-    label_time.after(1000, update_clock)  # Aktualizacja co 1000 ms (1 sekunda)
+    label_time.after(1000, update_clock)  # Aktualizacja co 1000 ms
 
 def move_window(event):
     window.geometry(f"+{event.x_root}+{event.y_root}")
