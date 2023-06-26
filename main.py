@@ -4,8 +4,8 @@ import datetime
 import sqlite3
 import time
 import smtplib
-# from email.mime.text import MIMEText
-# from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 import subprocess
 
 class TimeTrackerApp:
