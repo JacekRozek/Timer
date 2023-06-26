@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import Tk, Button, ttk, messagebox
 from adds import *
+import time
 
 
 def submit_form():
@@ -12,6 +13,7 @@ def submit_form():
 def logout():
     root.deiconify()  # Ponowne wyświetlenie okna logowania
     root.destroy()
+    
 
 ##  ustawienia okna głównego
 root = Tk()
@@ -95,4 +97,7 @@ exit_button.pack(
     padx=5,
     pady=5,
 )
+
+
+
 root.mainloop()

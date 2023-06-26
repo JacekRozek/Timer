@@ -62,7 +62,7 @@ class Stopwatch:
 
 window = tk.Tk() # Tworzenie głównego okna
 stopwatch = Stopwatch(window)
-stopwatch_label = tk.Label(window, text="00:00:00", font=("Helvetica", 20))
-stopwatch_label.pack(pady=20)
+# stopwatch_label = tk.Label(window, text="00:00:00", font=("Helvetica", 20))
+# stopwatch_label.pack(pady=20)
 
 window.mainloop()
