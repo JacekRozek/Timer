@@ -33,17 +33,12 @@ class TimeTrackerApp:
         for field in self.fields.values():
             field.pack(anchor=tk.W, padx=10, pady=5, fill=tk.X)
         
-        
         self.logged_in = False
-        self.login_time = None
 
         self.login_button = tk.Button(self.root, text="Zaloguj", command=self.login)
         self.login_button.pack(pady=10)
-        # self.logout_button = tk.Button(self.root, text="Wyloguj", command=self.logout, state=tk.DISABLED)
-        # self.logout_button.pack(pady=10)
-
-        ### Protokół zamykania okna
-        self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
+        
+        self.root.protocol("WM_DELETE_WINDOW", self.on_closing) ### Protokół zamykania okna
 
     def login(self):
         username = self.fields['username'].get()
@@ -66,6 +61,8 @@ class TimeTrackerApp:
         self.login()
     
     def open_task_window(self):
+        self.root.deiconify()
+        self.root.destroy()
         try:
             subprocess.run(['python', 'test.py'])  # Uruchomienie pliku 'task.py' w nowym procesie
         except FileNotFoundError:
@@ -94,32 +91,31 @@ class TimeTrackerApp:
         with open(file_path, "a") as file:
             file.write(f"Czas pracy: {elapsed_time}\n")
 
-    # def send_email(self, elapsed_time):
-    #     email_from = "your_email@example.com"
-    #     email_to = "manager@example.com"
-    #     smtp_server = "smtp.example.com"
-    #     smtp_port = 587
-    #     username = "your_email@example.com"
-    #     password = "your_password"
+    def send_email(self, elapsed_time):
+        email_from = "your_email@example.com"
+        email_to = "manager@example.com"
+        smtp_server = "smtp.example.com"
+        smtp_port = 587
+        username = "your_email@example.com"
+        password = "your_password"
 
-    #     message = MIMEMultipart()
-    #     message["From"] = email_from
-    #     message["To"] = email_to
-    #     message["Subject"] = "Czas pracy użytkownika"
+        message = MIMEMultipart()
+        message["From"] = email_from
+        message["To"] = email_to
+        message["Subject"] = "Czas pracy użytkownika"
 
-    #     body = f"Czas pracy użytkownika: {elapsed_time}"
-    #     message.attach(MIMEText(body, "plain"))
+        body = f"Czas pracy użytkownika: {elapsed_time}"
+        message.attach(MIMEText(body, "plain"))
 
-    #     with smtplib.SMTP(smtp_server, smtp_port) as server:
-    #         server.starttls()
-    #         server.login(username, password)
-    #         server.sendmail(email_from, email_to, message.as_string())
+        with smtplib.SMTP(smtp_server, smtp_port) as server:
+            server.starttls()
+            server.login(username, password)
+            server.sendmail(email_from, email_to, message.as_string())
 
     def on_closing(self):
-        if self.logged_in:
-            messagebox.showinfo("Informacja", "Najpierw wyloguj się przed zamknięciem aplikacji.")
-        else:
-            self.root.destroy()
+            result = messagebox.askokcancel("Quit", "Czy na pewno chcesz zamknąć aplikację?")
+            if result:
+                self.root.destroy()
 
 
 if __name__ == "__main__":
