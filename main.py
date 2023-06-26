@@ -1,11 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox, ttk
-import datetime
 import sqlite3
-import time
-import smtplib
-from email.mime.text import MIMEText
-from email.mime.multipart import MIMEMultipart
 import subprocess
 
 class TimeTrackerApp:
@@ -68,50 +63,6 @@ class TimeTrackerApp:
         except FileNotFoundError:
             messagebox.showerror("Błąd", "Nie można znaleźć pliku 'task.py'")
     
-    def logout(self):
-        if self.logged_in:
-            self.logged_in = False
-            logout_time = datetime.datetime.now()
-            elapsed_time = logout_time - self.login_time
-            self.send_email(elapsed_time)
-            self.write_to_file(elapsed_time)
-            self.login_button.config(state=tk.NORMAL)
-            self.logout_button.config(state=tk.DISABLED)
-
-    def check_activity(self):
-        if self.logged_in:
-            response = messagebox.askyesno("Potwierdzenie aktywności", "Czy jesteś nadal aktywny?")
-            if response:
-                self.root.after(3600000, self.check_activity)  # Sprawdź co 1 godzinę (3600000 ms)
-            else:
-                self.logout()
-
-    def write_to_file(self, elapsed_time):
-        file_path = "czas_pracy.txt"
-        with open(file_path, "a") as file:
-            file.write(f"Czas pracy: {elapsed_time}\n")
-
-    def send_email(self, elapsed_time):
-        email_from = "your_email@example.com"
-        email_to = "manager@example.com"
-        smtp_server = "smtp.example.com"
-        smtp_port = 587
-        username = "your_email@example.com"
-        password = "your_password"
-
-        message = MIMEMultipart()
-        message["From"] = email_from
-        message["To"] = email_to
-        message["Subject"] = "Czas pracy użytkownika"
-
-        body = f"Czas pracy użytkownika: {elapsed_time}"
-        message.attach(MIMEText(body, "plain"))
-
-        with smtplib.SMTP(smtp_server, smtp_port) as server:
-            server.starttls()
-            server.login(username, password)
-            server.sendmail(email_from, email_to, message.as_string())
-
     def on_closing(self):
             result = messagebox.askokcancel("Quit", "Czy na pewno chcesz zamknąć aplikację?")
             if result:
