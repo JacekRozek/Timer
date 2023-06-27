@@ -33,7 +33,7 @@ class TimeTrackerApp:
         self.login_button = tk.Button(self.root, text="Zaloguj", command=self.login)
         self.login_button.pack(pady=10)
         
-        self.root.protocol("WM_DELETE_WINDOW", self.on_closing) ### Protokół zamykania okna
+        self.root.protocol("WM_DELETE_WINDOW") ### Protokół zamykania okna
 
     def login(self):
         username = self.fields['username'].get()
@@ -59,7 +59,7 @@ class TimeTrackerApp:
         self.root.deiconify()
         self.root.destroy()
         try:
-            subprocess.run(['python', 'test.py'])  # Uruchomienie pliku 'task.py' w nowym procesie
+            subprocess.run(['python', 'task.py'])  # Uruchomienie pliku 'task.py' w nowym procesie
         except FileNotFoundError:
             messagebox.showerror("Błąd", "Nie można znaleźć pliku 'task.py'")
     
