@@ -4,21 +4,30 @@ import sqlite3
 conn = sqlite3.connect('database.db')
 cursor = conn.cursor()
 
-# Utworzenie tabeli "users"
 cursor.execute('''CREATE TABLE IF NOT EXISTS users
                   (id INTEGER PRIMARY KEY AUTOINCREMENT,
                   username TEXT NOT NULL,
                   password TEXT NOT NULL)''')
 
-# Przykładowe dane użytkowników
 users = [
     ('admin', 'admin'),
     ('user1', 'P@ssw0rd'),
     ('user2', 'P@ssw0rd')
 ]
 
+cursor.execute('''CREATE TABLE IF NOT EXISTS savedTimes
+                  (id INTEGER PRIMARY KEY AUTOINCREMENT,
+                  task TEXT NOT NULL,
+                  planned_time TEXT NOT NULL,
+                  time TEXT NOT NULL)''')
+
+savedTimes = [
+    ('test', '00:01:00', '00:00:05')
+]
+
 # Wstawienie danych użytkowników do tabeli
 cursor.executemany('INSERT INTO users (username, password) VALUES (?, ?)', users)
+cursor.executemany('INSERT INTO savedTimes (task, planned_time, time) VALUES (?, ?, ?)', savedTimes)
 
 # Zatwierdzenie zmian i zamknięcie połączenia z bazą danych
 conn.commit()

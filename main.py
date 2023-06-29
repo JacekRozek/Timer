@@ -3,13 +3,14 @@ from tkinter import messagebox, ttk
 import sqlite3
 import subprocess
 
-class TimeTrackerApp:
+class LoginApp:
     def __init__(self):
         ### Opis wyglądu okna
         self.root = tk.Tk()
         self.root.title('Time Tracker')
-        self.root.geometry("300x200")
+        self.root.geometry("300x225")
         self.root.iconbitmap('./images/stopwatch.ico')
+        self.root.eval('tk::PlaceWindow . center')
         self.root.minsize(200, 150)
         self.root.maxsize(1000, 800)
         
@@ -34,6 +35,7 @@ class TimeTrackerApp:
         self.login_button.pack(pady=10)
         
         self.root.protocol("WM_DELETE_WINDOW") ### Protokół zamykania okna
+        self.root.mainloop()
 
     def login(self):
         username = self.fields['username'].get()
@@ -59,16 +61,16 @@ class TimeTrackerApp:
         self.root.deiconify()
         self.root.destroy()
         try:
-            subprocess.run(['python', 'task.py'])  # Uruchomienie pliku 'task.py' w nowym procesie
+            subprocess.run(['python', 'panel.py'])  # Uruchomienie pliku 'task.py' w nowym procesie
         except FileNotFoundError:
-            messagebox.showerror("Błąd", "Nie można znaleźć pliku 'task.py'")
+            messagebox.showerror("Błąd", "Nie można znaleźć pliku 'panel.py'")
     
     def on_closing(self):
             result = messagebox.askokcancel("Quit", "Czy na pewno chcesz zamknąć aplikację?")
             if result:
                 self.root.destroy()
 
-
+#plik jest uruchamiany automatycznie tylko w przypadku bezpośredniego uruchomienia
 if __name__ == "__main__":
-    app = TimeTrackerApp()
-    app.root.mainloop()
+    app = LoginApp()
+
