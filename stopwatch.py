@@ -100,9 +100,9 @@ class StopwatchApp:
         self.root.deiconify()
         self.root.destroy()
         try:
-            subprocess.run(['python', 'task.py'])  # Uruchomienie pliku 'task.py' w nowym procesie
+            subprocess.run(['python', 'panel.py'])  # Uruchomienie pliku 'task.py' w nowym procesie
         except FileNotFoundError:
-            messagebox.showerror("Błąd", "Nie można znaleźć pliku 'task.py'")
+            messagebox.showerror("Błąd", "Nie można znaleźć pliku 'panel.py'")
     
     def send_to_database(self, task, task_time, time_saved):
         conn = sqlite3.connect('database.db')
