@@ -4,7 +4,6 @@ from tkinter import messagebox
 import subprocess
 from multiprocessing import Process, Queue
 import sqlite3
-import threading
 
 class StopwatchApp:
     def __init__(self, task, task_time):
