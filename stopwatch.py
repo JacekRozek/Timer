@@ -4,18 +4,19 @@ from tkinter import messagebox
 import subprocess
 from multiprocessing import Process, Queue
 import sqlite3
+import threading
 
 class StopwatchApp:
     def __init__(self, task, task_time):
         self.root = tk.Tk()
         self.root.title('Stopwatch')
-        self.root.geometry("250x150+1500+900")
+        self.root.geometry("250x150+1500+800")
         
         self.start_time = None
         self.elapsed_time = 0
         self.is_running = False
         self.last_activity_time = None
-        self.inactivity_timeout = 4000
+        self.inactivity_timeout = 0
         
         goal = tk.Label(text=f"Pracujesz nad: {task}. Planujesz to zrobić w {task_time} ", borderwidth=1)
         goal.pack(padx=1, pady=10)
@@ -35,6 +36,7 @@ class StopwatchApp:
         self.stop_button.pack(side=tk.LEFT, padx=10)
         
         self.start_stopwatch()
+        self.root.after(5000, self.check_inactivity)
         self.root.mainloop()
         
     def start_stopwatch(self):
@@ -48,7 +50,7 @@ class StopwatchApp:
             self.start_button.config(state=tk.DISABLED)
             self.pause_button.config(state=tk.NORMAL)
             self.stop_button.config(state=tk.NORMAL)
-        #self.root.after(5000, self.check_inactivity())
+            #self.root.after(5000, self.check_inactivity)
         
     def pause_stopwatch(self):
         if self.is_running:
@@ -104,6 +106,11 @@ class StopwatchApp:
         except FileNotFoundError:
             messagebox.showerror("Błąd", "Nie można znaleźć pliku 'panel.py'")
     
+    def write_to_file(self, elapsed_time):
+        file_path = "czas_pracy.txt"
+        with open(file_path, "a") as file:
+           file.write(f"Czas pracy: {elapsed_time}\n")
+    
     def send_to_database(self, task, task_time, time_saved):
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
@@ -112,6 +119,33 @@ class StopwatchApp:
         conn.commit()
         cursor.close()
         conn.close()
+        self.write_to_file(tab)
+    
+    def logout(self):
+        self.logged_in = False
+        self.root.deiconify() # Przywrócenie okna
+        self.root.destroy()
+        try:
+            subprocess.run(['python', 'main.py'])  # Uruchomienie pliku 'main.py' w nowym procesie
+        except FileNotFoundError:
+            messagebox.showerror("Błąd", "Nie można znaleźć pliku 'main.py'")
+    
+    # def check_inactivity(self):
+    #     current_time_var = tk.IntVar()
+    #     current_time_var.set(int(time.time() * 1000))
+    #     if  self.last_activity_time is None:
+    #         self.last_activity_time = current_time_var.get()
+    #     else:
+    #         elapsed_time = current_time_var.get() - self.last_activity_time
+    #         if elapsed_time >= self.inactivity_timeout:
+    #             response = messagebox.askyesno("Potwierdzenie aktywności", "Czy jesteś nadal aktywny?")
+    #             if response:
+    #                 self.last_activity_time = current_time_var.get()
+    #             else:
+    #                 self.logout()
+    #         else:
+    #             self.last_activity_time = current_time_var.get() 
+    #     self.root.after(5000, self.check_inactivity)
     
     def check_inactivity(self):
         current_time_var = tk.IntVar()
@@ -121,13 +155,19 @@ class StopwatchApp:
         else:
             elapsed_time = current_time_var.get() - self.last_activity_time
             if elapsed_time >= self.inactivity_timeout:
-                response = messagebox.askyesno("Potwierdzenie aktywności", "Czy jesteś nadal aktywny?")
+                self.pause_stopwatch()
+                response = messagebox.askyesno("Potwierdzenie aktywności", "Czy jesteś nadal aktywny?", )
                 if response:
                     self.last_activity_time = current_time_var.get()
                 else:
                     self.logout()
+                self.start_stopwatch()
             else:
                 self.last_activity_time = current_time_var.get() 
+        self.root.after(5000, self.check_inactivity)
+    
+    # def no_response(self):
+        
     
 if __name__ == "__main__": #plik jest uruchamiany automatycznie tylko w przypadku bezpośredniego uruchomienia
     data_queue = Queue()

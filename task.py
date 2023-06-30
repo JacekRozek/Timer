@@ -43,10 +43,7 @@ class TaskApp:
         self.start_button.pack(side=tk.LEFT, padx=10)
         self.cancel_button = tk.Button(button_frame, text="Anuluj", command=self.cancel)
         self.cancel_button.pack(side=tk.LEFT, padx=10)
-        
-        ### Nieaktywność
-        # self.root.after(1000, self.check_inactivity)
-        
+                
         ### Zabezpieczenie przed zamknięciem bez wylogowania
         self.root.protocol("WM_DELETE_WINDOW", self.on_closing)
         self.root.mainloop()
@@ -105,24 +102,6 @@ class TaskApp:
             server.login(username, password)
             server.sendmail(email_from, email_to, message.as_string())
     
-    # def check_inactivity(self):
-    #     current_time_var = tk.IntVar()
-    #     current_time_var.set(int(time.time() * 1000))
-    #     if  self.last_activity_time is None:
-    #         self.last_activity_time = current_time_var.get()
-    #     else:
-    #         elapsed_time = current_time_var.get() - self.last_activity_time
-    #         if elapsed_time >= self.inactivity_timeout:
-    #             response = messagebox.askyesno("Potwierdzenie aktywności", "Czy jesteś nadal aktywny?")
-    #             if response:
-    #                 self.last_activity_time = current_time_var.get()
-    #             else:
-    #                 self.logout()
-    #         else:
-    #             self.last_activity_time = current_time_var.get()
-        
-    #     self.root.after(1000, self.check_inactivity)
-
     def cancel(self):
         self.root.deiconify() # Przywrócenie okna
         self.root.destroy()
@@ -131,5 +110,6 @@ class TaskApp:
         except FileNotFoundError:
             messagebox.showerror("Błąd", "Nie można znaleźć pliku 'panel.py'")
     
+            
 if __name__ == "__main__": #plik jest uruchamiany automatycznie tylko w przypadku bezpośredniego uruchomienia
     app = TaskApp()

@@ -11,8 +11,8 @@ cursor.execute('''CREATE TABLE IF NOT EXISTS users
 
 users = [
     ('admin', 'admin'),
-    ('user1', 'P@ssw0rd'),
-    ('user2', 'P@ssw0rd')
+    ('MStrach', 'P@ssw0rd'),
+    ('JRozek', 'P@ssw0rd')
 ]
 
 cursor.execute('''CREATE TABLE IF NOT EXISTS savedTimes
